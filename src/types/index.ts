@@ -14,25 +14,25 @@ export interface Schedule {
   startTime: string; // HH:mm format
   interval?: number; // in minutes, for Hourly
   daysOfWeek?: DayOfWeek[]; // for Weekly
-  nextRun?: Date | Timestamp; // Can be Date in app, Timestamp in Firestore
+  nextRun?: Date; // Use Date in app-level type
   isEnabled: boolean;
-  createdAt?: Timestamp; // Firestore server timestamp
+  createdAt?: Date; // Use Date in app-level type
 }
 
 export interface FirestoreSchedule extends Omit<Schedule, 'nextRun' | 'createdAt'> {
-  nextRun?: Timestamp;
-  createdAt: Timestamp;
+  nextRun?: Timestamp; // Firestore uses Timestamp
+  createdAt: Timestamp; // Firestore uses Timestamp
 }
 
 export interface LogEntry {
   id:string;
   jobId: string;
   jobName: string;
-  executionTime: Date | Timestamp; // Can be Date in app, Timestamp in Firestore
+  executionTime: Date; // Use Date in app-level type
   message: string;
   status: 'Success' | 'Failure';
 }
 
 export interface FirestoreLogEntry extends Omit<LogEntry, 'executionTime'> {
-  executionTime: Timestamp;
+  executionTime: Timestamp; // Firestore uses Timestamp
 }

@@ -1,16 +1,20 @@
-
 "use client";
 
-import type * as React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
-import { FileText, CheckCircle2, XCircle } from 'lucide-react';
-import type { LogEntry } from '@/types';
-import { format } from 'date-fns';
-import { ScrollArea } from '@/components/ui/scroll-area'; // Assuming global scroll area
-import type { Timestamp } from 'firebase/firestore';
-
+import type * as React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { FileText, CheckCircle2, XCircle } from "lucide-react";
+import type { LogEntry } from "@/types";
+import { format } from "date-fns";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface ExecutionLogProps {
   logs: LogEntry[];
@@ -27,7 +31,9 @@ export function ExecutionLog({ logs }: ExecutionLogProps) {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-muted-foreground text-center py-4">No job executions logged yet.</p>
+          <p className="text-muted-foreground text-center py-4">
+            No job executions logged yet.
+          </p>
         </CardContent>
       </Card>
     );
@@ -52,18 +58,32 @@ export function ExecutionLog({ logs }: ExecutionLogProps) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {logs.map((log) => { // Already sorted by ChronoPrintApp
-                const executionTimeDate = log.executionTime instanceof Date ? log.executionTime : (log.executionTime as Timestamp).toDate();
+              {logs.map((log) => {
+                // Already sorted by ChronoPrintApp
+                // log.executionTime is already a Date object due to type standardization
+                const executionTimeDate = log.executionTime;
                 return (
                   <TableRow key={log.id}>
                     <TableCell className="font-medium">{log.jobName}</TableCell>
-                    <TableCell>{format(executionTimeDate, 'MMM d, yyyy HH:mm:ss')}</TableCell>
                     <TableCell>
-                      <Badge variant={log.status === 'Success' ? 'default' : 'destructive'} className={log.status === 'Success' ? 'bg-green-500 hover:bg-green-600' : ''}>
-                        {log.status === 'Success' ? 
-                          <CheckCircle2 className="mr-1 h-4 w-4 inline-block" /> : 
-                          <XCircle className="mr-1 h-4 w-4 inline-block" />
+                      {format(executionTimeDate, "MMM d, yyyy HH:mm:ss")}
+                    </TableCell>
+                    <TableCell>
+                      <Badge
+                        variant={
+                          log.status === "Success" ? "default" : "destructive"
                         }
+                        className={
+                          log.status === "Success"
+                            ? "bg-green-500 hover:bg-green-600"
+                            : ""
+                        }
+                      >
+                        {log.status === "Success" ? (
+                          <CheckCircle2 className="mr-1 h-4 w-4 inline-block" />
+                        ) : (
+                          <XCircle className="mr-1 h-4 w-4 inline-block" />
+                        )}
                         {log.status}
                       </Badge>
                     </TableCell>

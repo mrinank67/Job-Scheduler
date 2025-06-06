@@ -1,16 +1,21 @@
-
 "use client";
 
-import type * as React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
-import { Switch } from '@/components/ui/switch';
-import { Button } from '@/components/ui/button';
-import { List, Clock3, CalendarDays, Repeat, Trash2 } from 'lucide-react';
-import type { Schedule } from '@/types';
-import { format } from 'date-fns';
-import type { Timestamp } from 'firebase/firestore';
+import type * as React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
+import { Button } from "@/components/ui/button";
+import { List, Clock3, CalendarDays, Repeat, Trash2 } from "lucide-react";
+import type { Schedule } from "@/types";
+import { format } from "date-fns";
 
 interface ScheduleListProps {
   schedules: Schedule[];
@@ -20,31 +25,35 @@ interface ScheduleListProps {
 
 function formatRecurrence(schedule: Schedule): string {
   switch (schedule.type) {
-    case 'Hourly':
+    case "Hourly":
       return `Every ${schedule.interval} min`;
-    case 'Daily':
+    case "Daily":
       return `Daily`;
-    case 'Weekly':
-      return `On ${schedule.daysOfWeek?.join(', ')}`;
+    case "Weekly":
+      return `On ${schedule.daysOfWeek?.join(", ")}`;
     default:
-      return 'N/A';
+      return "N/A";
   }
 }
 
-function getScheduleTypeIcon(type: Schedule['type']) {
+function getScheduleTypeIcon(type: Schedule["type"]) {
   switch (type) {
-    case 'Hourly':
+    case "Hourly":
       return <Clock3 className="h-5 w-5 text-primary" />;
-    case 'Daily':
+    case "Daily":
       return <CalendarDays className="h-5 w-5 text-primary" />;
-    case 'Weekly':
+    case "Weekly":
       return <Repeat className="h-5 w-5 text-primary" />;
     default:
       return null;
   }
 }
 
-export function ScheduleList({ schedules, onToggleSchedule, onDeleteSchedule }: ScheduleListProps) {
+export function ScheduleList({
+  schedules,
+  onToggleSchedule,
+  onDeleteSchedule,
+}: ScheduleListProps) {
   if (schedules.length === 0) {
     return (
       <Card className="shadow-lg mt-8">
@@ -55,7 +64,9 @@ export function ScheduleList({ schedules, onToggleSchedule, onDeleteSchedule }: 
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-muted-foreground text-center py-4">No schedules defined yet. Add a new schedule to get started!</p>
+          <p className="text-muted-foreground text-center py-4">
+            No schedules defined yet. Add a new schedule to get started!
+          </p>
         </CardContent>
       </Card>
     );
@@ -83,14 +94,16 @@ export function ScheduleList({ schedules, onToggleSchedule, onDeleteSchedule }: 
           </TableHeader>
           <TableBody>
             {schedules.map((schedule) => {
-              let nextRunDisplay = 'Paused / Not set';
+              let nextRunDisplay = "Paused / Not set";
               if (schedule.nextRun && schedule.isEnabled) {
-                const nextRunDate = schedule.nextRun instanceof Date ? schedule.nextRun : (schedule.nextRun as Timestamp).toDate();
-                nextRunDisplay = format(nextRunDate, 'MMM d, HH:mm');
+                // schedule.nextRun is already a Date object due to type standardization
+                nextRunDisplay = format(schedule.nextRun, "MMM d, HH:mm");
               }
               return (
                 <TableRow key={schedule.id}>
-                  <TableCell className="font-medium">{schedule.jobName}</TableCell>
+                  <TableCell className="font-medium">
+                    {schedule.jobName}
+                  </TableCell>
                   <TableCell className="flex items-center">
                     {getScheduleTypeIcon(schedule.type)}
                     <span className="ml-2">{schedule.type}</span>
@@ -98,21 +111,37 @@ export function ScheduleList({ schedules, onToggleSchedule, onDeleteSchedule }: 
                   <TableCell>
                     {`At ${schedule.startTime}, ${formatRecurrence(schedule)}`}
                   </TableCell>
+                  <TableCell>{nextRunDisplay}</TableCell>
                   <TableCell>
-                    {nextRunDisplay}
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant={schedule.isEnabled ? 'default' : 'secondary'} className={schedule.isEnabled ? 'bg-green-500 hover:bg-green-600' : 'bg-yellow-500 hover:bg-yellow-600'}>
-                      {schedule.isEnabled ? 'Active' : 'Paused'}
+                    <Badge
+                      variant={schedule.isEnabled ? "default" : "secondary"}
+                      className={
+                        schedule.isEnabled
+                          ? "bg-green-500 hover:bg-green-600"
+                          : "bg-yellow-500 hover:bg-yellow-600"
+                      }
+                    >
+                      {schedule.isEnabled ? "Active" : "Paused"}
                     </Badge>
                   </TableCell>
                   <TableCell className="text-right space-x-2">
                     <Switch
                       checked={schedule.isEnabled}
-                      onCheckedChange={(checked) => onToggleSchedule(schedule.id, checked)}
-                      aria-label={schedule.isEnabled ? 'Pause schedule' : 'Enable schedule'}
+                      onCheckedChange={(checked) =>
+                        onToggleSchedule(schedule.id, checked)
+                      }
+                      aria-label={
+                        schedule.isEnabled
+                          ? "Pause schedule"
+                          : "Enable schedule"
+                      }
                     />
-                    <Button variant="ghost" size="icon" onClick={() => onDeleteSchedule(schedule.id)} aria-label="Delete schedule">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => onDeleteSchedule(schedule.id)}
+                      aria-label="Delete schedule"
+                    >
                       <Trash2 className="h-4 w-4 text-destructive" />
                     </Button>
                   </TableCell>

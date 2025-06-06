@@ -5,12 +5,12 @@ import { getFirestore } from "firebase/firestore";
 // Your web app's Firebase configuration
 // IMPORTANT: Replace with your actual Firebase project configuration
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_STORAGE_BUCKET",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyDnMIylHrc_3wXDc3lSYE2Digg9AWI3o1M",
+  authDomain: "chronoprint-fac66.firebaseapp.com",
+  projectId: "chronoprint-fac66",
+  storageBucket: "chronoprint-fac66.firebasestorage.app",
+  messagingSenderId: "931385438561",
+  appId: "1:931385438561:web:5bcd810a8eb35b9cb61520"
 };
 
 // Initialize Firebase
