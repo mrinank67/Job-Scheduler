@@ -1,3 +1,4 @@
+
 "use client";
 
 import type * as React from 'react';
@@ -7,6 +8,9 @@ import { Badge } from '@/components/ui/badge';
 import { FileText, CheckCircle2, XCircle } from 'lucide-react';
 import type { LogEntry } from '@/types';
 import { format } from 'date-fns';
+import { ScrollArea } from '@/components/ui/scroll-area'; // Assuming global scroll area
+import type { Timestamp } from 'firebase/firestore';
+
 
 interface ExecutionLogProps {
   logs: LogEntry[];
@@ -48,22 +52,25 @@ export function ExecutionLog({ logs }: ExecutionLogProps) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {logs.slice().reverse().map((log) => ( // Show newest logs first
-                <TableRow key={log.id}>
-                  <TableCell className="font-medium">{log.jobName}</TableCell>
-                  <TableCell>{format(log.executionTime, 'MMM d, yyyy HH:mm:ss')}</TableCell>
-                  <TableCell>
-                    <Badge variant={log.status === 'Success' ? 'default' : 'destructive'} className={log.status === 'Success' ? 'bg-green-500 hover:bg-green-600' : ''}>
-                      {log.status === 'Success' ? 
-                        <CheckCircle2 className="mr-1 h-4 w-4 inline-block" /> : 
-                        <XCircle className="mr-1 h-4 w-4 inline-block" />
-                      }
-                      {log.status}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>{log.message}</TableCell>
-                </TableRow>
-              ))}
+              {logs.map((log) => { // Already sorted by ChronoPrintApp
+                const executionTimeDate = log.executionTime instanceof Date ? log.executionTime : (log.executionTime as Timestamp).toDate();
+                return (
+                  <TableRow key={log.id}>
+                    <TableCell className="font-medium">{log.jobName}</TableCell>
+                    <TableCell>{format(executionTimeDate, 'MMM d, yyyy HH:mm:ss')}</TableCell>
+                    <TableCell>
+                      <Badge variant={log.status === 'Success' ? 'default' : 'destructive'} className={log.status === 'Success' ? 'bg-green-500 hover:bg-green-600' : ''}>
+                        {log.status === 'Success' ? 
+                          <CheckCircle2 className="mr-1 h-4 w-4 inline-block" /> : 
+                          <XCircle className="mr-1 h-4 w-4 inline-block" />
+                        }
+                        {log.status}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>{log.message}</TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
         </ScrollArea>
@@ -71,8 +78,3 @@ export function ExecutionLog({ logs }: ExecutionLogProps) {
     </Card>
   );
 }
-
-// Minimal ScrollArea component if not available globally or want local specific styling
-const ScrollArea = ({ className, children }: { className?: string; children: React.ReactNode }) => (
-  <div className={`overflow-auto ${className || ''}`}>{children}</div>
-);
